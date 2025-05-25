@@ -52,6 +52,30 @@ public class GO_InventorySlotDragHandler_UI : MonoBehaviour, IBeginDragHandler, 
         rt.sizeDelta = new Vector2(64, 64);
         dragIcon.transform.localScale = Vector3.one;
         dragIcon.transform.position = Input.mousePosition;
+        
+        // Add Text to Display the quantity
+        GameObject quantityTextGO = new GameObject("QuantityText");
+        quantityTextGO.transform.SetParent(dragIcon.transform, false);
+
+        TextMeshProUGUI quantityTMP = quantityTextGO.AddComponent<TextMeshProUGUI>();
+        int quantity = inventoryUI.inventory.inventorySlots[slotIndex].GetQuantity();
+        quantityTMP.text = quantity.ToString();
+        quantityTMP.fontSize = 18;
+        quantityTMP.color = Color.white;
+        quantityTMP.alignment = TextAlignmentOptions.BottomRight;
+        quantityTMP.raycastTarget = false;
+
+        // Optional: Black Border for Better visual
+        var outline = quantityTextGO.AddComponent<Outline>();
+        outline.effectColor = Color.black;
+        outline.effectDistance = new Vector2(1f, -1f);
+
+        // Extend all RectTranform to contain the Icon
+        RectTransform quantityRT = quantityTextGO.GetComponent<RectTransform>();
+        quantityRT.anchorMin = Vector2.zero;
+        quantityRT.anchorMax = Vector2.one;
+        quantityRT.offsetMin = new Vector2(0, -10); 
+        quantityRT.offsetMax = new Vector2(10, 0); 
 
         // Track current drag globally
         currentDragIcon = dragIcon;
