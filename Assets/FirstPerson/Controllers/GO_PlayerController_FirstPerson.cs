@@ -11,7 +11,14 @@ public class GO_PlayerController_FirstPerson : MonoBehaviour
     private PlayerInputActions inputActions;
     private Vector2 moveInput;
     private Vector2 lookInput;
+    private Vector2 ScrollInput;
+    private bool UseInput;
+    private bool InteractInput;
     private bool jumpPressed;
+    
+    private bool usePressed;
+    private bool interactPressed;
+    private float scrollY;
 
     private void Awake()
     {
@@ -24,6 +31,15 @@ public class GO_PlayerController_FirstPerson : MonoBehaviour
         inputActions.Player.Look.canceled += ctx => lookInput = Vector2.zero;
 
         inputActions.Player.Jump.performed += ctx => Jump();
+
+        inputActions.Player.Use.performed += ctx => Use();
+        inputActions.Player.Interact.performed += ctx => Interact();
+
+        inputActions.Player.Scroll.performed += ctx =>
+        {
+            scrollY = ctx.ReadValue<Vector2>().y;
+            HandleScroll(scrollY);
+        };
     }
 
     private void OnEnable()
@@ -58,5 +74,23 @@ public class GO_PlayerController_FirstPerson : MonoBehaviour
     private void Jump()
     {
         OwnerCharacter.Jump();
+    }
+    
+    private void Use()
+    {
+        OwnerCharacter.UseItem();
+    }
+
+    private void Interact()
+    {
+        
+    }
+
+    private void HandleScroll(float deltaY)
+    {
+        if (Mathf.Approximately(deltaY, 0f)) return;
+
+        bool scrollForward = deltaY > 0;
+        OwnerCharacter.ScrollToolbar.ScrollItems(scrollForward);
     }
 }

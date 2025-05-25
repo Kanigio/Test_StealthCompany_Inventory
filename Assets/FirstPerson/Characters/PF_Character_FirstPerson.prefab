@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 963697728110358397}
   - component: {fileID: 6797206732560487019}
   - component: {fileID: 2945704810376930356}
+  - component: {fileID: 4394189560318888921}
   - component: {fileID: -3407490592053923278}
   m_Layer: 0
   m_Name: PF_Character_FirstPerson
@@ -64,7 +65,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Controller: {fileID: 6797206732560487019}
-  JumpForce: 5
+  ScrollToolbar: {fileID: 4394189560318888921}
+  JumpForce: 7
   groundCheckDistance: 0.2
   groundLayer:
     serializedVersion: 2
@@ -101,6 +103,24 @@ MonoBehaviour:
   maxSlots: 24
   itemPickupPrefab: {fileID: 107101786482717874, guid: dca292964bd7328459fc8935b168e755, type: 3}
   inventorySlots: []
+--- !u!114 &4394189560318888921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4066663305395325207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2665ca29628ac041ae7c676f514b585, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentSelectedItem:
+    itemData: {fileID: 0}
+    quantity: 0
+    isUnlocked: 0
+    usageLeft: 0
+  Inventory: {fileID: 2945704810376930356}
 --- !u!54 &-3407490592053923278
 Rigidbody:
   m_ObjectHideFlags: 0

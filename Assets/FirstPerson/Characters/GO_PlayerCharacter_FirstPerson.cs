@@ -8,6 +8,8 @@ public class GO_PlayerCharacter_FirstPerson : MonoBehaviour, I_Interactor_FirstP
     
     public GO_PlayerController_FirstPerson Controller;
     
+    public GO_PlayerToolBar_Inventories ScrollToolbar;
+    
     // Jump force multiplier
     public float JumpForce = 5f;
     
@@ -84,5 +86,12 @@ public class GO_PlayerCharacter_FirstPerson : MonoBehaviour, I_Interactor_FirstP
     {
         rb = GetComponent<Rigidbody>();
     }
-    
+
+    public void UseItem()
+    {
+        if (ScrollToolbar != null)
+        {
+            ScrollToolbar.UseSelectedItem();
+        }
+    }
 }

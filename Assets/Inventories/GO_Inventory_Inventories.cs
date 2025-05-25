@@ -355,4 +355,9 @@ public class GO_Inventory_Inventories : MonoBehaviour
 
         OnInventoryChanged?.Invoke();
     }
+    
+    public void NotifyInventoryChanged()
+    {
+        OnInventoryChanged?.Invoke();
+    }
 }
