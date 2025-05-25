@@ -12,6 +12,9 @@ public class GO_InventorySlotDragHandler_UI : MonoBehaviour, IBeginDragHandler, 
     private GameObject dragIcon;      // The floating icon that follows the mouse while dragging
     private static GameObject currentDragIcon; // Static to ensure only one drag icon exists at a time
     private static GO_InventorySlotDragHandler_UI currentDraggedHandler; // Reference to the dragged slot handler
+    
+    private PointerEventData.InputButton currentDragButton;
+    private bool isSplitDrag = false;
 
     private void Awake()
     {
@@ -23,11 +26,18 @@ public class GO_InventorySlotDragHandler_UI : MonoBehaviour, IBeginDragHandler, 
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        currentDragButton = eventData.button;
+        isSplitDrag = (currentDragButton == PointerEventData.InputButton.Right);
+        
         // Destroy any existing drag icon before creating a new one (prevents duplicates)
         if (currentDragIcon != null)
         {
             Destroy(currentDragIcon);
             currentDragIcon = null;
+        }
+        if (inventoryUI.inventory.inventorySlots[slotIndex].IsEmpty())
+        {
+            return;
         }
 
         // Create a new GameObject to visually represent the dragged icon
@@ -56,10 +66,12 @@ public class GO_InventorySlotDragHandler_UI : MonoBehaviour, IBeginDragHandler, 
         // Add Text to Display the quantity
         GameObject quantityTextGO = new GameObject("QuantityText");
         quantityTextGO.transform.SetParent(dragIcon.transform, false);
-
         TextMeshProUGUI quantityTMP = quantityTextGO.AddComponent<TextMeshProUGUI>();
-        int quantity = inventoryUI.inventory.inventorySlots[slotIndex].GetQuantity();
-        quantityTMP.text = quantity.ToString();
+        
+        int fullQuantity = inventoryUI.inventory.inventorySlots[slotIndex].GetQuantity();
+        int displayedQuantity = isSplitDrag ? fullQuantity / 2 : fullQuantity;
+        
+        quantityTMP.text = displayedQuantity.ToString();
         quantityTMP.fontSize = 18;
         quantityTMP.color = Color.white;
         quantityTMP.alignment = TextAlignmentOptions.BottomRight;
@@ -120,7 +132,16 @@ public class GO_InventorySlotDragHandler_UI : MonoBehaviour, IBeginDragHandler, 
             return;
 
         // Move item data in inventory
-        inventoryUI.inventory.MoveItem(dragged.slotIndex, slotIndex);
+        if (dragged.isSplitDrag)
+        {
+            // Call Split if Right Click
+            inventoryUI.inventory.SplitItemQuantity(dragged.slotIndex, slotIndex);
+        }
+        else
+        {
+            // Otherwise move normally
+            inventoryUI.inventory.MoveItem(dragged.slotIndex, slotIndex);
+        }
 
         // Cleanup drag icon manually, because OnEndDrag won't be called
         if (currentDragIcon != null)

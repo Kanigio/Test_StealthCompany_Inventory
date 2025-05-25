@@ -249,6 +249,98 @@ public class GO_Inventory_Inventories : MonoBehaviour
     }
 
     /// <summary>
+    /// Split an Item and move it from one slot to another.
+    /// Merges items if same type and not full, otherwise swaps them.
+    /// </summary>
+    public void SplitItemQuantity(int fromIndex, int toIndex)
+    {
+        // Validate indices
+        if (fromIndex < 0 || fromIndex >= inventorySlots.Count) return;
+        if (toIndex < 0 || toIndex >= inventorySlots.Count) return;
+        if (fromIndex == toIndex) return;
+
+        var fromSlot = inventorySlots[fromIndex];
+        var toSlot = inventorySlots[toIndex];
+
+        if (fromSlot.IsEmpty()) return;
+
+        int fromQuantity = fromSlot.GetQuantity();
+        if (fromQuantity <= 1) return; // Not enough to split
+
+        int splitAmount = fromQuantity / 2;
+        int remainingAmount = fromQuantity - splitAmount;
+
+        // Remove half from source
+        fromSlot.SetQuantity(remainingAmount);
+        inventorySlots[fromIndex] = fromSlot;
+
+        // Prepare split stack
+        S_ItemRow_Inventories splitStack = new S_ItemRow_Inventories()
+        {
+            itemData = fromSlot.itemData,
+            isUnlocked = true,
+            usageLeft = fromSlot.usageLeft
+        };
+        splitStack.SetQuantity(splitAmount);
+
+        // Case 1: Target is empty → place split
+        if (toSlot.IsEmpty())
+        {
+            inventorySlots[toIndex] = splitStack;
+        }
+        // Case 2: Same item and target has space → merge
+        else if (toSlot.itemData == fromSlot.itemData && toSlot.GetQuantity() < toSlot.itemData.maxStack)
+        {
+            int availableSpace = toSlot.itemData.maxStack - toSlot.GetQuantity();
+            int toAdd = Mathf.Min(availableSpace, splitAmount);
+            toSlot.SetQuantity(toSlot.GetQuantity() + toAdd);
+            inventorySlots[toIndex] = toSlot;
+
+            int leftover = splitAmount - toAdd;
+            if (leftover > 0)
+            {
+                // Try to place leftover in a new empty slot
+                int emptyIndex = inventorySlots.FindIndex(slot => slot.IsEmpty());
+                if (emptyIndex != -1)
+                {
+                    S_ItemRow_Inventories leftoverStack = new S_ItemRow_Inventories()
+                    {
+                        itemData = fromSlot.itemData,
+                        isUnlocked = true,
+                        usageLeft = fromSlot.usageLeft
+                    };
+                    leftoverStack.SetQuantity(leftover);
+                    inventorySlots[emptyIndex] = leftoverStack;
+                }
+                else
+                {
+                    // No space: put leftover back in original slot
+                    fromSlot.SetQuantity(fromSlot.GetQuantity() + leftover);
+                    inventorySlots[fromIndex] = fromSlot;
+                }
+            }
+        }
+        // Case 3: Cannot merge → try placing in another empty slot
+        else
+        {
+            int emptyIndex = inventorySlots.FindIndex(slot => slot.IsEmpty());
+            if (emptyIndex != -1)
+            {
+                inventorySlots[emptyIndex] = splitStack;
+            }
+            else
+            {
+                // Nowhere to place → drop or put back
+                fromSlot.SetQuantity(fromSlot.GetQuantity() + splitAmount);
+                inventorySlots[fromIndex] = fromSlot;
+                // Optional: Trigger drop behavior here
+            }
+        }
+
+        OnInventoryChanged?.Invoke();
+    }
+
+    /// <summary>
     /// Sorts the inventory by pushing empty slots to the end of the list.
     /// </summary>
     public void UpdateList()
