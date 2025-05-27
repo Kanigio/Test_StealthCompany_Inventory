@@ -7,11 +7,15 @@ using System.Collections.Generic;
 
 public class GO_Inventory_UI : MonoBehaviour
 {
-    public GO_Inventory_Inventories inventory;
+     public GO_Inventory_Inventories inventory;
     public GameObject slotPrefab;
     public Transform slotParent;
 
+    [SerializeField] private GameObject inventoryPanel; // UI panel to show/hide
+    [SerializeField] private KeyCode toggleKey = KeyCode.Tab; // Toggle key
+
     private List<GameObject> slotInstances = new List<GameObject>();
+    private GO_PlayerController_FirstPerson playerController;
 
     private void Start()
     {
@@ -26,7 +30,10 @@ public class GO_Inventory_UI : MonoBehaviour
             yield return null;
         }
 
-        inventory = Sgl_GameMode_FirstPerson.Instance.PlayerCharacter.GetComponent<GO_Inventory_Inventories>();
+        var player = Sgl_GameMode_FirstPerson.Instance.PlayerCharacter;
+
+        inventory = player.GetComponent<GO_Inventory_Inventories>();
+        playerController = player.GetComponent<GO_PlayerController_FirstPerson>();
 
         if (inventory != null)
         {
@@ -37,6 +44,10 @@ public class GO_Inventory_UI : MonoBehaviour
         {
             Debug.LogError("Could not find inventory on PlayerCharacter.");
         }
+
+        // Start with inventory hidden
+        if (inventoryPanel != null)
+            inventoryPanel.SetActive(false);
     }
 
     private void OnDisable()
@@ -45,6 +56,37 @@ public class GO_Inventory_UI : MonoBehaviour
         {
             inventory.OnInventoryChanged -= RenderInventory;
         }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(toggleKey))
+        {
+            ToggleInventory();
+        }
+    }
+
+    private void ToggleInventory()
+    {
+        if (inventoryPanel == null) return;
+
+        bool isActive = inventoryPanel.activeSelf;
+        inventoryPanel.SetActive(!isActive);
+
+        if (playerController != null)
+        {
+            // Enable/Disable input on PlayerController
+            playerController.enabled = isActive; // Disable if inventory is open
+        }
+
+        if (!isActive)
+        {
+            RenderInventory(); // Update UI if we're opening it
+        }
+
+        // Optional: lock/unlock mouse
+        Cursor.visible = !isActive;
+        Cursor.lockState = isActive ? CursorLockMode.Locked : CursorLockMode.None;
     }
 
     public void RenderInventory()
@@ -72,11 +114,9 @@ public class GO_Inventory_UI : MonoBehaviour
             dragHandler.slotIndex = slotInstances.Count - 1;
             dragHandler.inventoryUI = this;
 
-            // Required: CanvasGroup for drag to work properly
             if (!slotGO.GetComponent<CanvasGroup>())
                 slotGO.AddComponent<CanvasGroup>();
 
-            // Assign icon and quantity
             Image icon = slotGO.transform.Find("Icon")?.GetComponent<Image>();
             TMP_Text quantityText = slotGO.transform.Find("QuantityText")?.GetComponent<TMP_Text>();
 

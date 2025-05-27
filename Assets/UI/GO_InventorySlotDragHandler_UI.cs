@@ -127,6 +127,7 @@ public class GO_InventorySlotDragHandler_UI : MonoBehaviour, IBeginDragHandler, 
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
         
+        if (draggingItemData.itemData == null) return;
         inventoryUI.inventory.DropItem(draggingItemData.itemData, draggingQauntity);
         inventoryUI.inventory.RemoveItem(draggingItemData, draggingQauntity);
 

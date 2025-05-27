@@ -63,7 +63,6 @@ public class GO_Inventory_Inventories : MonoBehaviour
 
                 slot.SetQuantity(slot.GetQuantity() + addAmount);
                 remainingQuantity -= addAmount;
-
                 Debug.Log($"Added {addAmount} to existing stack, remaining: {remainingQuantity}");
 
                 // Exit early if everything was added
