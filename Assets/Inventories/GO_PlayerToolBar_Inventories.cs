@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using System;
+
 
 public class GO_PlayerToolBar_Inventories : MonoBehaviour
 {
@@ -12,7 +14,11 @@ public class GO_PlayerToolBar_Inventories : MonoBehaviour
     int currentIndex = 0;
 
     // Reference to the Inventory
-    [SerializeField] private GO_Inventory_Inventories Inventory;
+    public GO_Inventory_Inventories Inventory;
+    
+    public event Action OnToolbarChanged;
+    
+    public int GetCurrentIndex() => currentIndex;
 
     public void ScrollItems(bool bForward)
     {
@@ -54,6 +60,7 @@ public class GO_PlayerToolBar_Inventories : MonoBehaviour
                 }
             }
         }
+        OnToolbarChanged?.Invoke(); //Notify UI
     }
 
     public void UseSelectedItem()
@@ -100,5 +107,11 @@ public class GO_PlayerToolBar_Inventories : MonoBehaviour
 
         // Optional: refresh UI if needed
         Inventory.NotifyInventoryChanged();
+        OnToolbarChanged?.Invoke(); // Trigger update
+    }
+    
+    public void NotifyToolbarChanged()
+    {
+        OnToolbarChanged?.Invoke();
     }
 }

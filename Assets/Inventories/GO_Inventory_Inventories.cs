@@ -121,7 +121,7 @@ public class GO_Inventory_Inventories : MonoBehaviour
         }
 
         // Notify listeners (like UI) that inventory changed
-        OnInventoryChanged?.Invoke();
+        NotifyInventoryChanged();
     }
 
     /// <summary>
@@ -174,7 +174,7 @@ public class GO_Inventory_Inventories : MonoBehaviour
             itemRow.isUnlocked = false;
         }
 
-        OnInventoryChanged?.Invoke();
+        NotifyInventoryChanged();
     }
 
     /// <summary>
@@ -245,7 +245,7 @@ public class GO_Inventory_Inventories : MonoBehaviour
             inventorySlots[toIndex] = fromSlot;
         }
 
-        OnInventoryChanged?.Invoke();
+        NotifyInventoryChanged();
     }
 
     /// <summary>
@@ -337,7 +337,7 @@ public class GO_Inventory_Inventories : MonoBehaviour
             }
         }
 
-        OnInventoryChanged?.Invoke();
+        NotifyInventoryChanged();
     }
 
     /// <summary>
@@ -353,11 +353,17 @@ public class GO_Inventory_Inventories : MonoBehaviour
             return 0; // Maintain order of non-empty slots
         });
 
-        OnInventoryChanged?.Invoke();
+        NotifyInventoryChanged();
     }
     
     public void NotifyInventoryChanged()
     {
         OnInventoryChanged?.Invoke();
+
+        var Toolbar = GetComponentInParent<GO_PlayerToolBar_Inventories>();
+        if (Toolbar != null)
+        {
+            Toolbar.NotifyToolbarChanged();
+        }
     }
 }
