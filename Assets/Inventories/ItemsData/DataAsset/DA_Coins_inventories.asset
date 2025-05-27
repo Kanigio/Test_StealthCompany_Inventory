@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemID: 0
   itemName: Coins
-  icon: {fileID: 21300000, guid: b2e20cd5fadcbf947bead2ec6dd2fe07, type: 3}
+  icon: {fileID: 21300000, guid: c0a64cf08c26e7341b69cf5b0f5e1975, type: 3}
   value: 50
   maxStack: 999
-  smallPileSprite: {fileID: 21300000, guid: b2e20cd5fadcbf947bead2ec6dd2fe07, type: 3}
-  bagSprite: {fileID: 21300000, guid: c4b3a4c2b83c910468fc4725530416d2, type: 3}
-  chestSprite: {fileID: 21300000, guid: 3341c485f4a0f7e4e860c5626dc8f60a, type: 3}
+  smallPileSprite: {fileID: 21300000, guid: c0a64cf08c26e7341b69cf5b0f5e1975, type: 3}
+  bagSprite: {fileID: 21300000, guid: 568773584f248a64ba597ebbb39fa3a9, type: 3}
+  chestSprite: {fileID: 21300000, guid: c26fdb47e3d666c40aec8b3b25a1dd27, type: 3}

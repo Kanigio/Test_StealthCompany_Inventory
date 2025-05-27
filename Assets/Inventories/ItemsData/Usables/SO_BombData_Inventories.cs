@@ -17,16 +17,28 @@ public class SO_BombData_Inventories : SO_UsableItemData_Inventories
             return;
         }
 
-        Transform throwOrigin = user.transform; // Puoi usare la mano/camera per un origin migliore
-        GameObject bomb = Instantiate(BombPrefab, throwOrigin.position + throwOrigin.forward, Quaternion.identity);
+        // Use the player's camera to determine direction and position
+        Camera cam = user.GetComponentInChildren<Camera>();
+        if (cam == null)
+        {
+            Debug.LogWarning("No Camera found on user.");
+            return;
+        }
 
+        // Spawn position: in front of camera, slightly elevated
+        Vector3 spawnPosition = cam.transform.position + cam.transform.forward * 2f + cam.transform.up * 0.2f;
+
+        // Instantiate the bomb and rotate it forward
+        GameObject bomb = GameObject.Instantiate(BombPrefab, spawnPosition, Quaternion.identity);
+
+        // Apply force in the camera's forward direction
         Rigidbody rb = bomb.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.AddForce(throwOrigin.forward * ThrowForce, ForceMode.Impulse);
+            rb.AddForce(cam.transform.forward * ThrowForce, ForceMode.Impulse);
         }
 
-        // Passa parametri alla bomba
+        // Set bomb behavior parameters
         GO_BombBehavior_Inventories behavior = bomb.GetComponent<GO_BombBehavior_Inventories>();
         if (behavior != null)
         {

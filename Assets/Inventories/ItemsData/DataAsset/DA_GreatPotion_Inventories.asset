@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemID: 3
   itemName: Great Potion
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: e2ee8ca6b8eb62c4f93eb817c8bb8af3, type: 3}
   value: 200
   maxStack: 10
   genericUseCost: 0

@@ -22,6 +22,8 @@ public class GO_HealthComponent_FirstPerson : MonoBehaviour
         {
             Die();
         }
+        
+        Debug.LogWarning("GameObject Took Damage!");
     }
 
     public void Heal(float amount)

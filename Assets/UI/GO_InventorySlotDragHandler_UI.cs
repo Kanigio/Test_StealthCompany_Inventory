@@ -15,6 +15,9 @@ public class GO_InventorySlotDragHandler_UI : MonoBehaviour, IBeginDragHandler, 
     
     private PointerEventData.InputButton currentDragButton;
     private bool isSplitDrag = false;
+    
+    private int draggingQauntity = 0;
+    private S_ItemRow_Inventories draggingItemData;
 
     private void Awake()
     {
@@ -71,6 +74,9 @@ public class GO_InventorySlotDragHandler_UI : MonoBehaviour, IBeginDragHandler, 
         int fullQuantity = inventoryUI.inventory.inventorySlots[slotIndex].GetQuantity();
         int displayedQuantity = isSplitDrag ? fullQuantity / 2 : fullQuantity;
         
+        draggingQauntity = displayedQuantity;
+        draggingItemData = inventoryUI.inventory.inventorySlots[slotIndex];
+        
         quantityTMP.text = displayedQuantity.ToString();
         quantityTMP.fontSize = 18;
         quantityTMP.color = Color.white;
@@ -120,6 +126,9 @@ public class GO_InventorySlotDragHandler_UI : MonoBehaviour, IBeginDragHandler, 
 
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
+        
+        inventoryUI.inventory.DropItem(draggingItemData.itemData, draggingQauntity);
+        inventoryUI.inventory.RemoveItem(draggingItemData, draggingQauntity);
 
         inventoryUI?.RenderInventory();
     }

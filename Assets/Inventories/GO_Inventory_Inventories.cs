@@ -127,7 +127,7 @@ public class GO_Inventory_Inventories : MonoBehaviour
     /// <summary>
     /// Drops item into the game world using a prefab when inventory is full.
     /// </summary>
-    private void DropItem(SO_ItemData_Inventories itemData, int quantity)
+    public void DropItem(SO_ItemData_Inventories itemData, int quantity)
     {
         Debug.Log($"[DropItem] Dropping {itemData.itemName} x{quantity}");
 

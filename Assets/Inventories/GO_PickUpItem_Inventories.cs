@@ -31,6 +31,21 @@ public class GO_PickUpItem_Inventories : MonoBehaviour, I_Interactable_FirstPers
         }
     }
 
+    public void Start()
+    {
+        // Update the SpriteRenderer component if available
+        SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        if (spriteRenderer != null && item.itemData != null)
+        {
+            // Call SO method to get correct sprite based on quantity
+            spriteRenderer.sprite = item.itemData.GetSpriteBasedOnQuantity(item.GetQuantity());
+        }
+        else
+        {
+            Debug.LogWarning("SpriteRenderer not found or item data is missing!");
+        }
+    }
+
     public void OnTriggerEnter(Collider other)
     {
         Interact(other.gameObject);

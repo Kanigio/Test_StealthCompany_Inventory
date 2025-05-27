@@ -23,7 +23,7 @@ public class GO_BombBehavior_Inventories : MonoBehaviour
         Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider hit in hits)
         {
-            var health = hit.GetComponent<GO_HealthComponent_FirstPerson>();
+            var health = hit.GetComponentInParent<GO_HealthComponent_FirstPerson>();
             if (health != null)
             {
                 health.TakeDamage(damage);
