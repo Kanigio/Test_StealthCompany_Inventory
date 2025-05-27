@@ -94,4 +94,9 @@ public class GO_PlayerCharacter_FirstPerson : MonoBehaviour, I_Interactor_FirstP
             ScrollToolbar.UseSelectedItem();
         }
     }
+
+    public void ScrollItems(bool bForward)
+    {
+        ScrollToolbar.ScrollItems(!bForward);
+    }
 }

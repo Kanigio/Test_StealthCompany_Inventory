@@ -91,6 +91,6 @@ public class GO_PlayerController_FirstPerson : MonoBehaviour
         if (Mathf.Approximately(deltaY, 0f)) return;
 
         bool scrollForward = deltaY > 0;
-        OwnerCharacter.ScrollToolbar.ScrollItems(scrollForward);
+        OwnerCharacter.ScrollItems(scrollForward);
     }
 }
