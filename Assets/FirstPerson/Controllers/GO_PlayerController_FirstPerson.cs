@@ -83,7 +83,7 @@ public class GO_PlayerController_FirstPerson : MonoBehaviour
 
     private void Interact()
     {
-        
+        OwnerCharacter.TryInteract();
     }
 
     private void HandleScroll(float deltaY)

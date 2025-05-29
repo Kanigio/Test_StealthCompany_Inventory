@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class GO_PlayerCharacter_FirstPerson : MonoBehaviour, I_Interactor_FirstPerson
+public class GO_PlayerCharacter_FirstPerson : MonoBehaviour
 {
     
     public GO_PlayerController_FirstPerson Controller;
@@ -21,6 +21,8 @@ public class GO_PlayerCharacter_FirstPerson : MonoBehaviour, I_Interactor_FirstP
     
     [SerializeField] private Transform cameraTransform;
     private float cameraPitch = 0f;
+    
+    public GO_Interactor_FirstPerson Interactor { get; private set; }
     
     private Rigidbody rb;
 
@@ -76,17 +78,18 @@ public class GO_PlayerCharacter_FirstPerson : MonoBehaviour, I_Interactor_FirstP
             interactableComponent.Interact(this.GameObject());
         }
     }
-
-    public void InteractWith(GameObject interactable)
-    {
-        
-    }
     
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        Interactor = GetComponent<GO_Interactor_FirstPerson>();
     }
 
+    public void TryInteract()
+    {
+        Interactor?.TryInteract();
+    }
+    
     public void UseItem()
     {
         if (ScrollToolbar != null)
