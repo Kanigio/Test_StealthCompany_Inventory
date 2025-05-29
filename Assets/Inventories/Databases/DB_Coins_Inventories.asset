@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34434be9410cfc14cab556561e6b716d, type: 3}
   m_Name: DB_Coins_Inventories
   m_EditorClassIdentifier: 
-  items: []
+  items:
+  - {fileID: 11400000, guid: f7cb8b0a83707ca41ba076d1b1b12ea5, type: 2}
