@@ -7,8 +7,6 @@ public class GO_PlayerController_FirstPerson : MonoBehaviour
 {
     
     public GO_PlayerCharacter_FirstPerson OwnerCharacter;
-    
-    [SerializeField] private float mouseSensitivity = 0.5f;
    
     private PlayerInputActions inputActions;
     private Vector2 moveInput;
@@ -68,6 +66,7 @@ public class GO_PlayerController_FirstPerson : MonoBehaviour
     private void Look(Vector2 look)
     {
         // Usually mouse look: X = yaw, Y = pitch (optional for camera)
+        float mouseSensitivity = 0.7f;
         float yaw = look.x * mouseSensitivity;
         float pitch = look.y * mouseSensitivity;
         OwnerCharacter.Look(pitch, yaw);
