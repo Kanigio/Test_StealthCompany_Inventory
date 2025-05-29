@@ -472,6 +472,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactionPrompt: Press F to get a random item
+  useCustomDatabase: 0
+  customItemDatabase: {fileID: 11400000, guid: 8ec1811bc7b61544392d622b99c332fb, type: 2}
   itemPickupPrefab: {fileID: 107101786482717874, guid: dca292964bd7328459fc8935b168e755, type: 3}
 --- !u!1 &5446348733728008257
 GameObject:

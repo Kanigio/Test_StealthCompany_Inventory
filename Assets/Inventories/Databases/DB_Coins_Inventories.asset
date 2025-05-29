@@ -10,10 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34434be9410cfc14cab556561e6b716d, type: 3}
-  m_Name: DB_RandomItems_Inventories
+  m_Name: DB_Coins_Inventories
   m_EditorClassIdentifier: 
-  items:
-  - {fileID: 11400000, guid: 36b508a51716d1c45894251050cc3930, type: 2}
-  - {fileID: 11400000, guid: bf661eaa2e8256f4cad8c8c451451fba, type: 2}
-  - {fileID: 11400000, guid: 2a7da201b8944b74dbbfad3f9acf0375, type: 2}
-  - {fileID: 11400000, guid: f7cb8b0a83707ca41ba076d1b1b12ea5, type: 2}
+  items: []

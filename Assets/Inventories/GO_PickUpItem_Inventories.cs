@@ -33,6 +33,79 @@ public class GO_PickUpItem_Inventories : MonoBehaviour, I_Interactable_FirstPers
 
     public void Start()
     {
+        UpdateSprite();
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        Interact(other.gameObject);
+    }
+
+    public void Interact(GameObject interactor)
+    {
+        // First, try to add to player's inventory
+        var inventory = interactor.GetComponent<GO_Inventory_Inventories>()
+                        ?? interactor.GetComponentInParent<GO_Inventory_Inventories>();
+
+        if (inventory != null)
+        {
+            inventory.AddItem(this.item.itemData, this.item.GetQuantity());
+            Destroy(gameObject);
+            return;
+        }
+
+        // Else: try to merge with another pickup
+        var otherPickup = interactor.GetComponentInParent<GO_PickUpItem_Inventories>();
+        if (otherPickup != null && otherPickup != this)
+        {
+            var otherItem = otherPickup.item;
+
+            // Check if same item type
+            if (this.item.itemData == otherItem.itemData)
+            {
+                int maxStack = item.itemData.maxStack;
+                int currentOtherQty = otherItem.GetQuantity();
+                int thisQty = this.item.GetQuantity();
+
+                if (currentOtherQty < maxStack)
+                {
+                    int spaceLeft = maxStack - currentOtherQty;
+                    int transferAmount = Mathf.Min(spaceLeft, thisQty);
+
+                    // Transfer amount
+                    otherItem.SetQuantity(currentOtherQty + transferAmount);
+                    this.item.SetQuantity(thisQty - transferAmount);
+
+                    // Update sprite for both pickups
+                    otherPickup.UpdateSprite();
+                    UpdateSprite();
+
+                    // Destroy this if empty
+                    if (this.item.GetQuantity() <= 0)
+                    {
+                        Destroy(gameObject);
+                    }
+
+                    return;
+                }
+            }
+        }
+
+        Debug.LogWarning("Interactor is not a valid inventory or compatible pickup.");
+    }
+
+    public string GetInteractionPrompt()
+    {
+        return "Pick up item";
+    }
+
+    public bool CanInteract(GameObject interactor)
+    {
+        return false;
+    }
+
+    private void UpdateSprite()
+    {
         // Update the SpriteRenderer component if available
         SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         if (spriteRenderer != null && item.itemData != null)
@@ -44,46 +117,5 @@ public class GO_PickUpItem_Inventories : MonoBehaviour, I_Interactable_FirstPers
         {
             Debug.LogWarning("SpriteRenderer not found or item data is missing!");
         }
-    }
-
-    public void OnTriggerEnter(Collider other)
-    {
-        Interact(other.gameObject);
-    }
-
-    public void Interact(GameObject interactor)
-    {
-        // Try to get the inventory component from the interacting GameObject
-        var inventory = interactor.GetComponent<GO_Inventory_Inventories>()
-                        ?? interactor.GetComponentInParent<GO_Inventory_Inventories>();
-        if (inventory != null)
-        {
-            // Add the item to the inventory
-            inventory.AddItem(this.item.itemData, this.item.GetQuantity());
-
-            // Optionally notify the interactor if it implements the interface
-            var interactorInterface = interactor.GetComponent<I_Interactor_FirstPerson>();
-            if (interactorInterface != null)
-            {
-                interactorInterface.InteractWith(this.gameObject);
-            }
-
-            // Destroy the pickup object after being collected
-            Destroy(gameObject);
-        }
-        else
-        {
-            Debug.LogWarning("Interactor does not have a GO_Inventory_Inventories component!");
-        }
-    }
-
-    public string GetInteractionPrompt()
-    {
-        return "Pick up item";
-    }
-
-    public bool CanInteract(GameObject interactor)
-    {
-        return false;
     }
 }

@@ -5,7 +5,14 @@ using UnityEngine;
 public class GO_SlotMachine_Inventories : MonoBehaviour, I_Interactable_FirstPerson
 {
     [SerializeField] private string interactionPrompt = "Press F to get a random item";
+    [SerializeField] private bool useCustomDatabase = false;
+    [SerializeField] private SO_ItemDatabase_Inventories customItemDatabase;
+    
+    [SerializeField] private int MinDropAmount = 1;
+    [SerializeField] private int MaxDropAmount = 3;
+    
     [SerializeField] private GameObject itemPickupPrefab;
+    
 
     public bool CanInteract(GameObject interactor)
     {
@@ -16,7 +23,7 @@ public class GO_SlotMachine_Inventories : MonoBehaviour, I_Interactable_FirstPer
     {
         Debug.Log("SlotMachine Activated!");
 
-        var itemDatabase = Sgl_GameMode_FirstPerson.Instance?.ItemDatabase;
+        SO_ItemDatabase_Inventories itemDatabase = useCustomDatabase ? customItemDatabase : Sgl_GameMode_FirstPerson.Instance?.ItemDatabase;
         if (itemDatabase == null || itemDatabase.AllItems == null || itemDatabase.AllItems.Count == 0)
         {
             Debug.LogWarning("No items available in the item database.");
@@ -59,8 +66,9 @@ public class GO_SlotMachine_Inventories : MonoBehaviour, I_Interactable_FirstPer
                 isUnlocked = true,
                 usageLeft = randomItem.IsUsable ? ((SO_UsableItemData_Inventories)randomItem).maxUsage : 0
             };
-
-            pickupComponent.SetItem(itemRow, 1);
+            
+            int randomQuantity = Random.Range(MinDropAmount, MaxDropAmount + 1); // RanRange int Exclude the max amount
+            pickupComponent.SetItem(itemRow, randomQuantity);
         }
         else
         {
